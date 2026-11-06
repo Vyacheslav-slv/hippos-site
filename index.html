@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Бегемотики - Мир милоты</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --jungle-deep: #1e3e20;
+            --jungle-green: #2E5C31;
+            --leaf-green: #4CAF50;
+            --leaf-hover: #43A047;
+            --soft-pink: #FFB6C1;
+            --hippo-purple: #8E7C93;
+            --bg-color: #f4f9f4;
+            --text-dark: #2c3e2e;
+            --glass-bg: rgba(255, 255, 255, 0.98);
+            --btn-shadow: 0 4px 0 rgba(0,0,0,0.2);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Nunito', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* БАННЕР */
+        .hero-banner {
+            position: relative;
+            width: 100%;
+            height: 350px;
+            background: linear-gradient(135deg, rgba(30,62,32,0.85), rgba(46,92,49,0.6)), 
+                        url('https://images.unsplash.com/photo-1511497584788-876760111969?q=80&w=1920&auto=format&fit=crop') center/cover no-repeat;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            padding: 20px;
+            box-shadow: inset 0 -20px 30px rgba(0,0,0,0.3);
+        }
+
+        .hero-banner h2 {
+            font-size: 3.5em;
+            font-weight: 900;
+            text-shadow: 3px 3px 0px rgba(0,0,0,0.4);
+            margin-bottom: 15px;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        .hero-banner p {
+            font-size: 1.3em;
+            max-width: 600px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+            animation: slideUp 0.8s ease-out 0.2s backwards;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Шапка */
+        header {
+            background: linear-gradient(135deg, var(--jungle-green), var(--jungle-deep));
+            color: white;
+            padding: 15px 30px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            border-bottom: 3px solid var(--soft-pink);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .logo { font-size: 1.6em; font-weight: 900; letter-spacing: 1px; cursor: pointer; }
+        .header-actions { display: flex; gap: 10px; align-items: center; }
+
+        /* Кнопки */
+        .btn {
+            border: none;
+            cursor: pointer;
+            font-weight: 800;
+            transition: all 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            user-select: none;
+        }
+
+        .btn:active {
+            transform: translateY(3px) !important;
+            box-shadow: none !important;
+        }
+
+        .icon-btn {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 1.1em;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .icon-btn:hover { background: rgba(255,255,255,0.25); }
+
+        .cart-btn {
+            background: var(--soft-pink);
+            color: var(--jungle-deep);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 1em;
+            box-shadow: var(--btn-shadow);
+        }
+        .cart-btn:hover { background: #ff9eb0; transform: translateY(-2px); box-shadow: 0 6px 0 rgba(0,0,0,0.2); }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .cart-btn.pulse { animation: pulse 0.4s ease-in-out; }
+
+        /* Панель инструментов */
+        .toolbar {
+            display: flex;
+            justify-content: center;
+            margin: 30px auto;
+            padding: 0 20px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .search-wrapper { position: relative; width: 100%; max-width: 500px; }
+
+        .search-box {
+            width: 100%;
+            padding: 14px 20px 14px 45px;
+            border-radius: 30px;
+            border: 2px solid transparent;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            outline: none;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+        .search-box:focus { border-color: var(--leaf-green); box-shadow: 0 4px 20px rgba(76, 175, 80, 0.2); }
+        .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); font-size: 1.2em; color: #888; }
+
+        /* Сетка товаров */
+        .catalog {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px 60px;
+            flex: 1;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 24px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(46, 92, 49, 0.15);
+            border-color: var(--soft-pink);
+        }
+
+        /* Оптимизация фото */
+        .product-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover; /* Заполняет блок без искажений */
+            object-position: center;
+            border-radius: 18px;
+            background-color: #f4f9f4;
+            margin-bottom: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover img { transform: scale(1.03); }
+
+        .product-card h3 { font-size: 1.15em; margin-bottom: 5px; font-weight: 800; color: var(--jungle-deep); }
+        .product-card .short-desc { font-size: 0.85em; color: #777; margin-bottom: 15px; flex-grow: 1; }
+        .price { color: var(--leaf-green); font-weight: 900; font-size: 1.3em; margin-bottom: 15px; }
+
+        .add-btn {
+            background: var(--leaf-green);
+            color: white;
+            padding: 12px;
+            border-radius: 15px;
+            font-size: 0.95em;
+            width: 100%;
+            box-shadow: 0 4px 0 #2E7D32;
+        }
+        .add-btn:hover { background: var(--leaf-hover); transform: translateY(-2px); box-shadow: 0 6px 0 #2E7D32; }
+
+        /* Модальные окна */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            padding: 20px;
+        }
+
+        .modal-overlay.active { display: flex; opacity: 1; }
+
+        .modal {
+            background: var(--glass-bg);
+            padding: 30px;
+            border-radius: 30px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+            transform: translateY(20px) scale(0.95);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal { transform: translateY(0) scale(1); }
+        .modal::-webkit-scrollbar { width: 8px; }
+        .modal::-webkit-scrollbar-thumb { background: var(--soft-pink); border-radius: 10px; }
+
+        .close-modal {
+            position: absolute;
+            top: 15px; right: 15px;
+            font-size: 30px;
+            cursor: pointer;
+            color: #999;
+            background: white;
+            border-radius: 50%;
+            width: 40px; height: 40px;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+            border: none;
+            z-index: 10;
+        }
+        .close-modal:hover { color: #f44336; transform: rotate(90deg); }
+
+        /* Модалка товара */
+        .product-modal-content { display: flex; flex-direction: column; gap: 20px; }
+        .product-modal-img { width: 100%; height: 280px; object-fit: cover; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .product-modal-info h2 { color: var(--jungle-deep); font-size: 1.8em; margin-bottom: 10px; }
+        .product-modal-info .desc { color: #555; line-height: 1.5; margin-bottom: 15px; font-size: 1em; }
+        .product-modal-price { font-size: 1.8em; font-weight: 900; color: var(--leaf-green); margin-bottom: 20px; }
+
+        .recommended-section { margin-top: 20px; border-top: 2px dashed #ddd; padding-top: 20px; }
+        .recommended-section h4 { color: var(--jungle-green); margin-bottom: 15px; font-size: 1.1em; }
+        .recommended-grid { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; }
+        .recommended-grid::-webkit-scrollbar { height: 6px; }
+        .recommended-grid::-webkit-scrollbar-thumb { background: var(--soft-pink); border-radius: 10px; }
+
+        .rec-item { min-width: 100px; text-align: center; cursor: pointer; transition: transform 0.2s; }
+        .rec-item:hover { transform: translateY(-3px); }
+        .rec-item img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 5px; border: 2px solid var(--soft-pink); }
+        .rec-item span { font-size: 0.8em; font-weight: 700; color: var(--jungle-deep); display: block; line-height: 1.1; }
+
+        /* Корзина */
+        .discount-info { background: linear-gradient(135deg, #ffebee, #fce4ec); padding: 15px; border-radius: 15px; margin-bottom: 20px; font-size: 0.95em; color: #c2185b; font-weight: 700; text-align: center; border: 1px dashed #f48fb1; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .cart-item-info strong { display: block; font-size: 1.05em; color: var(--jungle-deep); }
+        .cart-item-info span { color: var(--leaf-green); font-weight: 800; }
+        .cart-item-controls { display: flex; align-items: center; gap: 8px; }
+        .qty-btn { background: #e8f5e9; color: var(--jungle-green); border: none; width: 32px; height: 32px; border-radius: 10px; cursor: pointer; font-weight: 900; font-size: 1.1em; box-shadow: 0 2px 0 #c8e6c9; }
+        .qty-btn:hover { background: #c8e6c9; }
+        .qty-btn:active { transform: translateY(2px); box-shadow: none; }
+        .remove-btn { background: #ffebee; color: #f44336; border: none; width: 32px; height: 32px; border-radius: 10px; cursor: pointer; font-weight: 900; box-shadow: 0 2px 0 #ffcdd2; }
+        .remove-btn:hover { background: #ffcdd2; }
+        .remove-btn:active { transform: translateY(2px); box-shadow: none; }
+        .empty-cart-msg { text-align: center; color: #888; font-size: 1.1em; padding: 20px 0; }
+        .cart-total { font-size: 1.5em; font-weight: 900; text-align: right; margin-top: 20px; color: var(--jungle-deep); padding-top: 15px; border-top: 2px dashed #ddd; }
+        .clear-cart-btn { background: transparent; color: #f44336; border: 2px solid #f44336; padding: 10px; border-radius: 15px; cursor: pointer; font-weight: 800; margin-top: 15px; width: 100%; transition: all 0.3s; }
+        .clear-cart-btn:hover { background: #f44336; color: white; }
+
+        .order-form { margin-top: 20px; }
+        .order-form h3 { margin-bottom: 15px; color: var(--jungle-green); }
+        .order-form input, .order-form textarea { width: 100%; padding: 12px 15px; margin-bottom: 12px; border-radius: 12px; border: 2px solid #eee; font-family: inherit; font-size: 1em; outline: none; transition: border 0.3s; background: #fafafa; }
+        .order-form input:focus, .order-form textarea:focus { border-color: var(--leaf-green); background: white; }
+        .submit-btn { width: 100%; background: linear-gradient(135deg, var(--leaf-green), var(--jungle-green)); color: white; padding: 16px; border-radius: 15px; font-size: 1.1em; box-shadow: 0 4px 0 var(--jungle-deep); }
+        .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 0 var(--jungle-deep); }
+
+        /* Профиль */
+        .profile-header { text-align: center; margin-bottom: 20px; }
+        .profile-avatar { width: 80px; height: 80px; background: var(--soft-pink); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5em; margin: 0 auto 10px; border: 3px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 700; color: var(--jungle-deep); font-size: 0.9em; }
+        .form-group input { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #ddd; outline: none; transition: border 0.3s; }
+        .form-group input:focus { border-color: var(--leaf-green); }
+        .save-profile-btn { background: var(--leaf-green); color: white; padding: 15px; border-radius: 15px; width: 100%; font-size: 1.1em; box-shadow: 0 4px 0 #2E7D32; }
+
+        /* Юридические страницы */
+        .legal-content h3 { color: var(--jungle-green); margin: 20px 0 10px; font-size: 1.2em; }
+        .legal-content p, .legal-content li { color: #444; line-height: 1.6; margin-bottom: 10px; font-size: 0.95em; }
+        .legal-content ul { padding-left: 20px; }
+
+        /* Уведомление */
+        #toast { position: fixed; bottom: 30px; left: 50%; transform: translate(-50%, 100px); background: var(--jungle-deep); color: white; padding: 15px 30px; border-radius: 30px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.3); opacity: 0; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); z-index: 2000; white-space: nowrap; }
+        #toast.show { transform: translate(-50%, 0); opacity: 1; }
+
+        /* Футер */
+        footer { background: var(--jungle-deep); color: white; padding: 50px 20px 20px; border-top: 5px solid var(--soft-pink); margin-top: auto; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto 40px; }
+        .footer-col h4 { color: var(--soft-pink); margin-bottom: 15px; font-size: 1.1em; }
+        .footer-col ul { list-style: none; }
+        .footer-col li { margin-bottom: 10px; }
+        .footer-col a { color: #ddd; text-decoration: none; cursor: pointer; transition: color 0.3s; font-size: 0.95em; }
+        .footer-col a:hover { color: white; }
+        .footer-bottom { text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; font-size: 0.9em; color: #aaa; }
+        .contact-info { margin-bottom: 10px; display: block; }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .hero-banner h2 { font-size: 2em; }
+            .hero-banner p { font-size: 1em; }
+            header { padding: 15px; justify-content: center; }
+            .logo { width: 100%; text-align: center; margin-bottom: 10px; }
+            .catalog { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; padding: 0 10px 30px; }
+            .product-card img { height: 150px; }
+            .product-card h3 { font-size: 1em; }
+            .add-btn { padding: 8px; font-size: 0.85em; }
+            .product-modal-img { height: 200px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Скрытый iframe для отправки формы -->
+    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+
+    <header>
+        <div class="logo" onclick="window.scrollTo({top:0, behavior:'smooth'})">🦛 Бегемотики</div>
+        <div class="header-actions">
+            <button class="btn icon-btn" onclick="openProfile()" title="Личный кабинет">👤 Профиль</button>
+            <button class="btn cart-btn" id="cartBtn" onclick="openCart()">
+                🛒 Корзина <span id="cartCount" style="background:var(--jungle-deep); color:white; padding:2px 8px; border-radius:10px; font-size:0.85em;">0</span>
+            </button>
+        </div>
+    </header>
+
+    <section class="hero-banner">
+        <h2>Бегемотики со всего мира!</h2>
+        <p>Самые милые, смешные и сонные. Найдите своего идеального компаньона для уюта и хорошего настроения.</p>
+    </section>
+
+    <div class="toolbar">
+        <div class="search-wrapper">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" class="search-box" placeholder="Найти своего бегемотика...">
+        </div>
+    </div>
+
+    <div class="catalog" id="catalog"></div>
+
+    <!-- МОДАЛКА ТОВАРА -->
+    <div class="modal-overlay" id="productModal">
+        <div class="modal">
+            <button class="close-modal" onclick="closeProduct()">&times;</button>
+            <div class="product-modal-content" id="productModalContent"></div>
+        </div>
+    </div>
+
+    <!-- МОДАЛКА КОРЗИНЫ -->
+    <div class="modal-overlay" id="cartModal">
+        <div class="modal">
+            <button class="close-modal" onclick="closeCart()">&times;</button>
+            <h2>Ваша корзина</h2>
+            <div class="discount-info">🎁 <b>Скидки:</b> от 2 товаров - 5%, от 4 - 10%, от 6 - 15%!</div>
+            <div id="cartItems"></div>
+            <div id="cartFooter" style="display:none;">
+                <div class="cart-total" id="cartTotal"></div>
+                <button class="clear-cart-btn" onclick="clearCart()">🗑 Очистить корзину</button>
+                <div class="order-form">
+                    <h3>Оформление заказа</h3>
+                    <form id="orderForm" action="https://formsubmit.co/okotdv@gmail.com" method="POST" target="hidden_iframe" onsubmit="handleFormSubmit(event)">
+                        <input type="text" name="name" id="orderName" placeholder="Ваше имя" required>
+                        <input type="tel" name="phone" id="orderPhone" placeholder="Ваш телефон" required>
+                        <textarea name="address" id="orderAddress" placeholder="Адрес доставки" rows="2" required></textarea>
+                        <input type="hidden" name="_subject" value="Новый заказ с сайта Бегемотики!">
+                        <input type="hidden" name="_captcha" value="false">
+                        <input type="hidden" name="_template" value="table">
+                        <input type="hidden" name="order_details" id="hiddenOrderDetails" value="">
+                        <button type="submit" class="btn submit-btn" id="submitBtn">Отправить заказ на почту 📩</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- МОДАЛКА ПРОФИЛЯ -->
+    <div class="modal-overlay" id="profileModal">
+        <div class="modal" style="max-width: 450px;">
+            <button class="close-modal" onclick="closeProfile()">&times;</button>
+            <div class="profile-header">
+                <div class="profile-avatar">👤</div>
+                <h2>Личный кабинет</h2>
+                <p style="color:#777; font-size:0.9em;">Данные сохраняются в вашем браузере</p>
+            </div>
+            <form id="profileForm" onsubmit="saveProfile(event)">
+                <div class="form-group">
+                    <label>Имя и Фамилия</label>
+                    <input type="text" id="profName" placeholder="Иван Иванов" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="profEmail" placeholder="example@mail.ru" required>
+                </div>
+                <div class="form-group">
+                    <label>Телефон</label>
+                    <input type="tel" id="profPhone" placeholder="+7 (999) 123-45-67" required>
+                </div>
+                <div class="form-group">
+                    <label>Город</label>
+                    <input type="text" id="profCity" placeholder="Москва" required>
+                </div>
+                <div class="form-group">
+                    <label>Адрес доставки (улица, дом, квартира)</label>
+                    <input type="text" id="profAddress" placeholder="ул. Ленина, д. 1, кв. 1" required>
+                </div>
+                <button type="submit" class="btn save-profile-btn">Сохранить данные</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- МОДАЛКА ЮРИДИЧЕСКИХ СТРАНИЦ -->
+    <div class="modal-overlay" id="legalModal">
+        <div class="modal legal-content">
+            <button class="close-modal" onclick="closeLegal()">&times;</button>
+            <div id="legalContent"></div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>🦛 Бегемотики</h4>
+                <p style="color:#aaa; font-size:0.9em; line-height:1.5;">Магазин самых милых бегемотиков. Мы приносим радость и уют в каждый дом!</p>
+            </div>
+            <div class="footer-col">
+                <h4>Покупателям</h4>
+                <ul>
+                    <li><a onclick="openLegal('offer')">Публичная оферта</a></li>
+                    <li><a onclick="openLegal('delivery')">Условия доставки</a></li>
+                    <li><a onclick="openLegal('return')">Возврат и обмен</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Информация</h4>
+                <ul>
+                    <li><a onclick="openLegal('about')">О нас</a></li>
+                    <li><a onclick="openLegal('privacy')">Политика конфиденциальности</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Контакты</h4>
+                <a href="tel:+79339877320" class="contact-info">📞 +7 (933) 987 73 20</a>
+                <a href="mailto:okotdv@gmail.com" class="contact-info">✉️ okotdv@gmail.com</a>
+                <p style="color:#aaa; font-size:0.85em;">Ежедневно с 10:00 до 20:00</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2024 Бегемотики. Все права защищены. <br> ИП Бегемотов А.А. ИНН 123456789012
+        </div>
+    </footer>
+
+    <div id="toast">✅ Готово!</div>
+
+    <script>
+        // Данные товаров
+        const products = [
+            { id: 1, name: "Бегемотик с сердечком", price: 1500, img: "heart.jpg", desc: "Самый любвеобильный бегемотик. Дарит тепло и нежность каждому, кто посмотрит на него. Идеальный подарок для любимых." },
+            { id: 2, name: "Бегемотик с кофе", price: 1400, img: "coffee.jpg", desc: "Идеальный компаньон для утреннего кофе. Взбодрит и поднимет настроение, даже если вы не выспались." },
+            { id: 3, name: "Бегемотик смеется", price: 1200, img: "laugh.jpg", desc: "Заряжает позитивом на весь день! Его искренний смех невозможно не поддержать. Настоящий антидепрессант." },
+            { id: 4, name: "Бегемотик думает", price: 1300, img: "think.jpg", desc: "Философ в мире бегемотов. Размышляет о важном и просто о жизни. Поможет вам принять сложное решение." },
+            { id: 5, name: "Бегемотик грустит", price: 1100, img: "sad.jpg", desc: "Нуждается в вашей заботе и обнимашках. Такой трогательный и милый, что сердце тает." },
+            { id: 6, name: "Бегемотик кушает траву", price: 1600, img: "grass.jpg", desc: "Любитель свежей зелени. Наслаждается жизнью и хрустит травкой. Напоминает о здоровом образе жизни." },
+            { id: 7, name: "Бегемотик сонный", price: 1800, img: "sleep.jpg", desc: "Видит сладкие сны на мягкой подушке. Напоминает о важности отдыха и заботе о себе." },
+            { id: 8, name: "Бегемотик с камушком", price: 1250, img: "rock.jpg", desc: "Нашёл своё сокровище и не отдаст! Очень обаятельный собственник. Ценит то, что имеет." },
+            { id: 9, name: "Бегемотик лежит", price: 1350, img: "lie.jpg", desc: "Мастер релаксации. Показывает, как важно иногда просто полежать и ничего не делать." }
+        ];
+
+        let cart = [];
+        let isSubmitting = false;
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCatalog();
+            loadProfile();
+            
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase().trim();
+                const filtered = products.filter(p => p.name.toLowerCase().includes(query) || p.desc.toLowerCase().includes(query));
+                renderCatalog(filtered);
+            });
+
+            // Закрытие по клику вне окна
+            ['cartModal', 'productModal', 'profileModal', 'legalModal'].forEach(id => {
+                document.getElementById(id).addEventListener('click', (e) => {
+                    if (e.target === document.getElementById(id)) {
+                        document.getElementById(id).classList.remove('active');
+                    }
+                });
+            });
+        });
+
+        // Отрисовка каталога
+        function renderCatalog(items = products) {
+            const catalog = document.getElementById('catalog');
+            catalog.innerHTML = '';
+            
+            if(items.length === 0) {
+                catalog.innerHTML = '<p style="grid-column: 1/-1; text-align:center; font-size:1.2em; color:#666; padding: 40px;">Ничего не найдено 😔</p>';
+                return;
+            }
+
+            items.forEach(product => {
+                catalog.innerHTML += `
+                    <div class="product-card" onclick="openProduct(${product.id})">
+                        <img src="${product.img}" alt="${product.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x200/e8f5e9/2E5C31?text=Бегемотик'">
+                        <h3>${product.name}</h3>
+                        <p class="short-desc">${product.desc.substring(0, 50)}...</p>
+                        <div class="price">${product.price} ₽</div>
+                        <button class="btn add-btn" onclick="event.stopPropagation(); addToCart(${product.id})">В корзину</button>
+                    </div>
+                `;
+            });
+        }
+
+        // --- ТОВАРЫ ---
+        function openProduct(id) {
+            const product = products.find(p => p.id === id);
+            if (!product) return;
+
+            const recommended = products.filter(p => p.id !== id);
+            let recHtml = '';
+            recommended.forEach(rec => {
+                recHtml += `
+                    <div class="rec-item" onclick="openProduct(${rec.id})">
+                        <img src="${rec.img}" alt="${rec.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/80'">
+                        <span>${rec.name}</span>
+                    </div>
+                `;
+            });
+
+            const content = document.getElementById('productModalContent');
+            content.innerHTML = `
+                <img src="${product.img}" alt="${product.name}" class="product-modal-img" onerror="this.src='https://via.placeholder.com/400x250/e8f5e9/2E5C31?text=Бегемотик'">
+                <div class="product-modal-info">
+                    <h2>${product.name}</h2>
+                    <p class="desc">${product.desc}</p>
+                    <div class="product-modal-price">${product.price} ₽</div>
+                    <button class="btn add-btn" style="font-size:1.1em; padding:15px;" onclick="addToCart(${product.id})">Добавить в корзину</button>
+                </div>
+                <div class="recommended-section">
+                    <h4>Вам также может понравиться:</h4>
+                    <div class="recommended-grid">${recHtml}</div>
+                </div>
+            `;
+            
+            document.getElementById('productModal').classList.add('active');
+            document.querySelector('#productModal .modal').scrollTop = 0;
+        }
+
+        function closeProduct() { document.getElementById('productModal').classList.remove('active'); }
+
+        // --- УВЕДОМЛЕНИЯ ---
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+
+        // --- КОРЗИНА ---
+        function addToCart(id) {
+            const product = products.find(p => p.id === id);
+            const existing = cart.find(item => item.id === id);
+            
+            if (existing) existing.qty++;
+            else cart.push({ ...product, qty: 1 });
+            
+            updateCartUI();
+            showToast(`🦛 ${product.name} добавлен!`);
+            
+            const cartBtn = document.getElementById('cartBtn');
+            cartBtn.classList.remove('pulse');
+            void cartBtn.offsetWidth;
+            cartBtn.classList.add('pulse');
+        }
+
+        function removeFromCart(id) { cart = cart.filter(item => item.id !== id); updateCartUI(); }
+
+        function changeQty(id, delta) {
+            const item = cart.find(i => i.id === id);
+            if (item) {
+                item.qty += delta;
+                if (item.qty <= 0) removeFromCart(id);
+            }
+            updateCartUI();
+        }
+
+        function clearCart() {
+            if(confirm("Удалить всех бегемотиков из корзины?")) {
+                cart = [];
+                updateCartUI();
+                showToast("Корзина очищена 🧹");
+            }
+        }
+
+        function updateCartUI() {
+            const count = cart.reduce((sum, item) => sum + item.qty, 0);
+            document.getElementById('cartCount').innerText = count;
+
+            const cartItemsDiv = document.getElementById('cartItems');
+            const cartFooter = document.getElementById('cartFooter');
+            cartItemsDiv.innerHTML = '';
+            
+            if (cart.length === 0) {
+                cartItemsDiv.innerHTML = '<p class="empty-cart-msg">Ваша корзина пуста 🕸<br>Пора добавить немного милоты!</p>';
+                cartFooter.style.display = 'none';
+                return;
+            }
+
+            cartFooter.style.display = 'block';
+            let total = 0;
+            let totalQty = 0;
+
+            cart.forEach(item => {
+                total += item.price * item.qty;
+                totalQty += item.qty;
+                cartItemsDiv.innerHTML += `
+                    <div class="cart-item">
+                        <div class="cart-item-info">
+                            <strong>${item.name}</strong>
+                            <span>${item.price} ₽</span>
+                        </div>
+                        <div class="cart-item-controls">
+                            <button class="qty-btn" onclick="changeQty(${item.id}, -1)">-</button>
+                            <span style="font-weight:800; width:20px; text-align:center;">${item.qty}</span>
+                            <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
+                            <button class="remove-btn" onclick="removeFromCart(${item.id})">&times;</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            let discountPercent = 0;
+            if (totalQty >= 6) discountPercent = 15;
+            else if (totalQty >= 4) discountPercent = 10;
+            else if (totalQty >= 2) discountPercent = 5;
+
+            const discountAmount = total * (discountPercent / 100);
+            const finalTotal = total - discountAmount;
+
+            let totalHtml = `Итого: ${finalTotal} ₽`;
+            if (discountPercent > 0) {
+                totalHtml = `
+                    <div style="font-size:0.55em; color:#f44336; text-decoration:line-through; margin-bottom:5px;">${total} ₽</div>
+                    <div style="font-size:0.55em; color:var(--leaf-green); margin-bottom:5px;">Скидка ${discountPercent}% (-${discountAmount} ₽)</div>
+                    <div>Итого: ${finalTotal} ₽</div>
+                `;
+            }
+            document.getElementById('cartTotal').innerHTML = totalHtml;
+        }
+
+        function openCart() { document.getElementById('cartModal').classList.add('active'); }
+        function closeCart() { document.getElementById('cartModal').classList.remove('active'); }
+
+        // --- ПРОФИЛЬ ---
+        function openProfile() {
+            // Подставляем сохраненные данные
+            const saved = JSON.parse(localStorage.getItem('hippoProfile'));
+            if (saved) {
+                document.getElementById('profName').value = saved.name || '';
+                document.getElementById('profEmail').value = saved.email || '';
+                document.getElementById('profPhone').value = saved.phone || '';
+                document.getElementById('profCity').value = saved.city || '';
+                document.getElementById('profAddress').value = saved.address || '';
+            }
+            document.getElementById('profileModal').classList.add('active');
+        }
+
+        function closeProfile() { document.getElementById('profileModal').classList.remove('active'); }
+
+        function saveProfile(e) {
+            e.preventDefault();
+            const profile = {
+                name: document.getElementById('profName').value,
+                email: document.getElementById('profEmail').value,
+                phone: document.getElementById('profPhone').value,
+                city: document.getElementById('profCity').value,
+                address: document.getElementById('profAddress').value
+            };
+            localStorage.setItem('hippoProfile', JSON.stringify(profile));
+            showToast("✅ Профиль сохранен!");
+            closeProfile();
+            loadProfile(); // Обновляем данные в форме заказа
+        }
+
+        function loadProfile() {
+            const saved = JSON.parse(localStorage.getItem('hippoProfile'));
+            if (saved) {
+                // Автозаполнение формы заказа
+                document.getElementById('orderName').value = saved.name || '';
+                document.getElementById('orderPhone').value = saved.phone || '';
+                document.getElementById('orderAddress').value = `${saved.city || ''}, ${saved.address || ''}`;
+            }
+        }
+
+        // --- ОТПРАВКА ЗАКАЗА ---
+        function handleFormSubmit(e) {
+            if (cart.length === 0) {
+                e.preventDefault();
+                alert("Корзина пуста!");
+                return;
+            }
+
+            if (isSubmitting) {
+                e.preventDefault();
+                return;
+            }
+
+            isSubmitting = true;
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.innerText;
+            submitBtn.innerText = "Отправка... ⏳";
+            submitBtn.disabled = true;
+
+            let orderDetails = "🦛 Новый заказ с сайта Бегемотики:\n\n";
+            let total = 0;
+            let qty = 0;
+            
+            cart.forEach(item => {
+                orderDetails += `• ${item.name} - ${item.qty} шт. (${item.price * item.qty} руб.)\n`;
+                total += item.price * item.qty;
+                qty += item.qty;
+            });
+
+            let discount = 0;
+            if (qty >= 6) discount = 15;
+            else if (qty >= 4) discount = 10;
+            else if (qty >= 2) discount = 5;
+
+            const finalTotal = total - (total * discount / 100);
+            orderDetails += `\nСкидка: ${discount}%\n`;
+            orderDetails += `💰 ИТОГО К ОПЛАТЕ: ${finalTotal} руб.`;
+
+            document.getElementById('hiddenOrderDetails').value = orderDetails;
+
+            // Имитация отправки (форма уходит в iframe)
+            setTimeout(() => {
+                showToast("✅ Заказ успешно отправлен!");
+                alert("Спасибо за заказ! Мы свяжемся с вами для подтверждения.");
+                cart = [];
+                updateCartUI();
+                closeCart();
+                document.getElementById('orderForm').reset();
+                loadProfile(); // Восстанавливаем данные из профиля
+                
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = false;
+                isSubmitting = false;
+            }, 1500);
+        }
+
+        // --- ЮРИДИЧЕСКИЕ СТРАНИЦЫ ---
+        const legalTexts = {
+            about: `
+                <h2>О нас</h2>
+                <p>Добро пожаловать в «Бегемотики» — мир, где живет милота!</p>
+                <p>Мы — команда энтузиастов, которая обожает этих удивительных животных. Наша миссия — приносить радость и уют в каждый дом с помощью очаровательных фигурок бегемотиков.</p>
+                <p>Каждый наш бегемотик создан с любовью и вниманием к деталям. Мы верим, что маленькие вещи могут делать нас счастливее каждый день.</p>
+                <p>Спасибо, что выбираете нас!</p>
+            `,
+            offer: `
+                <h2>Публичная оферта</h2>
+                <p>Настоящий документ является официальным предложением (публичной офертой) ИП Бегемотов А.А. (далее — Продавец) и содержит все существенные условия договора купли-продажи товаров дистанционным способом.</p>
+                <h3>1. Общие положения</h3>
+                <p>1.1. Оформление заказа на сайте означает согласие Покупателя с условиями настоящей оферты.</p>
+                <p>1.2. Товары, представленные на сайте, являются сувенирной продукцией.</p>
+                <h3>2. Предмет договора</h3>
+                <p>2.1. Продавец обязуется передать Покупателю товар, а Покупатель обязуется оплатить и принять его на условиях настоящего договора.</p>
+                <h3>3. Цена и оплата</h3>
+                <p>3.1. Цены указаны в рублях РФ. Оплата производится после подтверждения заказа менеджером.</p>
+            `,
+            delivery: `
+                <h2>Условия доставки</h2>
+                <h3>Способы доставки:</h3>
+                <ul>
+                    <li><b>Курьерская доставка по городу:</b> 300 ₽. Бесплатно при заказе от 3000 ₽.</li>
+                    <li><b>Почта России:</b> от 250 ₽ (срок 3-7 дней).</li>
+                    <li><b>СДЭК / Boxberry:</b> от 200 ₽ (срок 2-5 дней).</li>
+                </ul>
+                <h3>Сроки:</h3>
+                <p>Отправка заказов осуществляется в течение 1-2 рабочих дней после подтверждения оплаты. В выходные и праздничные дни отправка не производится.</p>
+                <p>После отправки вы получите трек-номер для отслеживания посылки.</p>
+            `,
+            return: `
+                <h2>Возврат и обмен</h2>
+                <p>В соответствии с Законом РФ «О защите прав потребителей» вы можете вернуть товар надлежащего качества в течение 14 дней с момента получения.</p>
+                <h3>Условия возврата:</h3>
+                <ul>
+                    <li>Товар не был в употреблении.</li>
+                    <li>Сохранены его потребительские свойства и упаковка.</li>
+                    <li>Есть чек или иное подтверждение покупки.</li>
+                </ul>
+                <p>Возврат денежных средств осуществляется на карту покупателя в течение 10 рабочих дней после получения товара продавцом.</p>
+                <p>Если товар пришел с браком — мы компенсируем все расходы на доставку и заменим товар бесплатно.</p>
+            `,
+            privacy: `
+                <h2>Политика конфиденциальности</h2>
+                <p>Мы серьезно относимся к защите ваших персональных данных.</p>
+                <h3>Какие данные мы собираем:</h3>
+                <ul>
+                    <li>Имя и контактный телефон для связи по заказу.</li>
+                    <li>Адрес доставки.</li>
+                    <li>Email для отправки чеков и уведомлений.</li>
+                </ul>
+                <p>Мы не передаем ваши данные третьим лицам, за исключением служб доставки (для отправки заказа) и в случаях, предусмотренных законом.</p>
+                <p>Ваши данные хранятся на защищенных серверах. Вы можете запросить удаление своих данных, написав нам на почту.</p>
+            `
+        };
+
+        function openLegal(type) {
+            document.getElementById('legalContent').innerHTML = legalTexts[type];
+            document.getElementById('legalModal').classList.add('active');
+            document.querySelector('#legalModal .modal').scrollTop = 0;
+        }
+
+        function closeLegal() {
+            document.getElementById('legalModal').classList.remove('active');
+        }
+    </script>
+</body>
+</html>
